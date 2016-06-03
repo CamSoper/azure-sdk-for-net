@@ -5,17 +5,12 @@
 
 @echo off
 setlocal
-set autoRestVersion=0.13.0-Nightly20151212
+set autoRestVersion=0.16.0-Nightly20160426
 set source=-Source https://www.myget.org/F/autorest/api/v2
 
-:: TODO: Uncomment these and remove the local ones once they are checked in.
-::set accountSpecFile="https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/arm-datalake-analytics/account/2015-10-01-preview/swagger/account.json"
-::set jobSpecFile="https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/arm-datalake-analytics/job/2015-10-01-preview/swagger/job.json"
-::set catalogSpecFile="https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/arm-datalake-analytics/catalog/2015-10-01-preview/swagger/catalog.json"
-
-set accountSpecFile="C:\SRC\AzureSDK\azure-rest-api-specs\arm-datalake-analytics\account\2015-10-01-preview\swagger\account.json"
-set jobSpecFile="C:\SRC\AzureSDK\azure-rest-api-specs\arm-datalake-analytics\job\2015-10-01-preview\swagger\job.json"
-set catalogSpecFile="C:\SRC\AzureSDK\azure-rest-api-specs\arm-datalake-analytics\catalog\2015-10-01-preview\swagger\catalog.json"
+set accountSpecFile="https://raw.githubusercontent.com/begoldsm/azure-rest-api-specs/master/arm-datalake-analytics/account/2015-10-01-preview/swagger/account.json"
+set jobSpecFile="https://raw.githubusercontent.com/begoldsm/azure-rest-api-specs/master/arm-datalake-analytics/job/2016-03-20-preview/swagger/job.json"
+set catalogSpecFile="https://raw.githubusercontent.com/begoldsm/azure-rest-api-specs/master/arm-datalake-analytics/catalog/2015-10-01-preview/swagger/catalog.json"
 
 set repoRoot=%~dp0..\..\..\..
 set generateFolder=%~dp0Generated
@@ -29,5 +24,5 @@ call "%repoRoot%\tools\autorest.gen.cmd" %catalogSpecFile% Microsoft.Azure.Manag
 :: TODO: This should be removed once all the manual fixes are part of the generation functionality.
 :: Current manual fix up list:
 ::  Fix the dynamic host parameters (accountname and datalakejob and catalog service uri)
-call "powershell.exe" -Command "& %repoRoot%\tools\Fix-AdlGeneratedCode.ps1 -DataLakeAnalytics"
+:: call "powershell.exe" -Command "& %repoRoot%\tools\Fix-AdlGeneratedCode.ps1 -DataLakeAnalytics"
 endlocal

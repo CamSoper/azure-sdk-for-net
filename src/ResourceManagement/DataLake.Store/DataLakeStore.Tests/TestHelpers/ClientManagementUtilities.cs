@@ -14,9 +14,8 @@
 //
 using Microsoft.Azure.Management.DataLake.Store;
 using Microsoft.Azure.Management.Resources;
-using Microsoft.Azure.Test;
 using Microsoft.Rest.ClientRuntime.Azure.TestFramework;
-using System.Net.Http;
+using System;
 
 namespace DataLakeStore.Tests
 {
@@ -27,9 +26,9 @@ namespace DataLakeStore.Tests
         /// </summary>
         /// <param name="testBase">the test class</param>
         /// <returns>A redis cache management client, created from the current context (environment variables)</returns>
-        public static DataLakeStoreManagementClient GetDataLakeStoreManagementClient(this TestBase testBase, MockContext context)
+        public static DataLakeStoreAccountManagementClient GetDataLakeStoreAccountManagementClient(this TestBase testBase, MockContext context)
         {
-            return context.GetServiceClient<DataLakeStoreManagementClient>();
+            return context.GetServiceClient<DataLakeStoreAccountManagementClient>();
         }
 
         /// <summary>
@@ -49,11 +48,12 @@ namespace DataLakeStore.Tests
         /// <returns>A redis cache management client, created from the current context (environment variables)</returns>
         public static DataLakeStoreFileSystemManagementClient GetDataLakeStoreFileSystemManagementClient(this TestBase testBase, MockContext context)
         {
-            var client = context.GetServiceClient<DataLakeStoreFileSystemManagementClient>();
+            var client = context.GetServiceClient<DataLakeStoreFileSystemManagementClient>(true);
             
-            // reset this back to the default.
-            client.BaseUri = new System.Uri("https://accountname.datalakeserviceuri");
-            client.Datalakeserviceuri = TestEnvironmentFactory.GetTestEnvironment().Endpoints.DataLakeStoreServiceUri.OriginalString.Replace("https://", "");
+            // Set this to the default for the current environment
+            client.AdlsFileSystemDnsSuffix = TestEnvironmentFactory.GetTestEnvironment().Endpoints.DataLakeStoreServiceUri.OriginalString.Replace("https://", "");
+            // TODO: figure out how to test the custom public constructors in the future. Until then, manually set the timeout for the client to five minutes.
+            client.HttpClient.Timeout = TimeSpan.FromMinutes(5);
             return client;
         }
     }

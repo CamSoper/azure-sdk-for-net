@@ -6,7 +6,7 @@ namespace Microsoft.Azure.Search.Tests
 {
     using System;
     using System.Net;
-    using System.Web;
+    using Microsoft.AspNet.WebUtilities;
     using Microsoft.Azure.Search.Models;
     using Microsoft.Azure.Search.Tests.Utilities;
     using Microsoft.Rest.Azure;
@@ -150,7 +150,7 @@ namespace Microsoft.Azure.Search.Tests
             Run(() =>
             {
                 SearchIndexClient client = Data.GetSearchIndexClient();
-                string complexKey = HttpServerUtility.UrlTokenEncode(new byte[] { 1, 2, 3, 4, 5 });
+                string complexKey = WebEncoders.Base64UrlEncode(new byte[] { 1, 2, 3, 4, 5 });
 
                 var expectedDoc =
                     new Document()
@@ -265,7 +265,7 @@ namespace Microsoft.Azure.Search.Tests
                         Tags = new[] { "motel", "budget" },
                         ParkingIncluded = true,
                         SmokingAllowed = true,
-                        LastRenovationDate = new DateTimeOffset(1982, 4, 28, 0, 0, 0, TimeSpan.Zero),
+                        LastRenovationDate = new DateTimeOffset(1982, 4, 28, 0, 0, 0, TimeSpan.Zero),   //aka.ms/sre-codescan/disable
                         Rating = 1,
                         Location = GeographyPoint.Create(49.678581, -122.131577)
                     };

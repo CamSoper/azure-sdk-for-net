@@ -56,7 +56,7 @@ namespace Cdn.Tests.Helpers
             else
             {
                 handler.IsPassThrough = true;
-                ResourceManagementClient resourcesClient = context.GetServiceClient<ResourceManagementClient>(handler);
+                ResourceManagementClient resourcesClient = context.GetServiceClient<ResourceManagementClient>(handlers: handler);
                 return resourcesClient;
             }
         }
@@ -73,7 +73,7 @@ namespace Cdn.Tests.Helpers
             else
             {
                 handler.IsPassThrough = true;
-                cdnClient = context.GetServiceClient<CdnManagementClient>(handler);
+                cdnClient = context.GetServiceClient<CdnManagementClient>(handlers: handler);
             }
             return cdnClient;
         }
@@ -122,7 +122,7 @@ namespace Cdn.Tests.Helpers
         public static void WaitIfNotInPlaybackMode()
         {
             if (Environment.GetEnvironmentVariable("AZURE_TEST_MODE") != null && 
-                Environment.GetEnvironmentVariable("AZURE_TEST_MODE").
+                !Environment.GetEnvironmentVariable("AZURE_TEST_MODE").
                 Equals("Playback", StringComparison.CurrentCultureIgnoreCase))
             {
                 Thread.Sleep(TimeSpan.FromMinutes(1));

@@ -16,7 +16,7 @@ namespace Test.Azure.Management.Logic
         [Fact]
         public void CreateAndGetWorkflowVersion()
         {
-            using (MockContext context = MockContext.Start())
+            using (MockContext context = MockContext.Start("Test.Azure.Management.Logic.WorkflowVersionsScenarioTests"))
             {
                 string workflowName = TestUtilities.GenerateName("logicwf");
                 var client = this.GetLogicManagementClient(context);
@@ -28,17 +28,14 @@ namespace Test.Azure.Management.Logic
                     workflow: new Workflow
                     {
                         Location = this.location,
-                        Sku = new Sku()
-                        {
-                            Name = SkuName.Basic
-                        },
+                        Sku = this.sku,
                         Definition = JToken.Parse(this.definition)
                     });
 
                 // Get the workflow version and verify the content
                 var version = client.WorkflowVersions.Get(this.resourceGroupName, workflowName, workflow.Version);
                 Assert.Equal(WorkflowState.Enabled, workflow.State);
-                Assert.Equal(SkuName.Basic, workflow.Sku.Name);
+                Assert.Equal(this.sku.Name, workflow.Sku.Name);
                 Assert.NotEmpty(workflow.Definition.ToString());
 
                 // Delete the workflow

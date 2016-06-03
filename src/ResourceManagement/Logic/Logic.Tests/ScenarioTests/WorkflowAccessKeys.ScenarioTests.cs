@@ -18,10 +18,10 @@ namespace Test.Azure.Management.Logic
         [Fact]
         public void CreateAndDelete()
         {
-            using (MockContext context = MockContext.Start())
+            using (MockContext context = MockContext.Start("Test.Azure.Management.Logic.WorkflowAccessKeysScenarioTests"))
             {
                 string workflowName = TestUtilities.GenerateName("logicwf");
-				string accessKeyName = TestUtilities.GenerateName("accesskey");
+                string accessKeyName = TestUtilities.GenerateName("accesskey");
                 var client = this.GetLogicManagementClient(context);
 
                 // Create a workflow
@@ -31,15 +31,12 @@ namespace Test.Azure.Management.Logic
                     workflow: new Workflow
                     {
                         Location = this.location,
-                        Sku = new Sku()
-                        {
-                            Name = SkuName.Basic
-                        },
+                        Sku = this.sku,
                         State = WorkflowState.Enabled,
                         Definition = JToken.Parse(this.simpleDefinition)
                     });
 
-				// Create an access key
+                // Create an access key
                 var accessKey = client.WorkflowAccessKeys.CreateOrUpdate(
                     this.resourceGroupName,
                     workflowName,
@@ -53,19 +50,19 @@ namespace Test.Azure.Management.Logic
                 Assert.NotNull(accessKey.NotBefore);
                 Assert.NotNull(accessKey.NotAfter);
 
-				// Delete the access key
+                // Delete the access key
                 client.WorkflowAccessKeys.Delete(this.resourceGroupName, workflowName, accessKeyName);
 
-				// List access key and verify only one key
+                // List access key and verify only one key
                 var accesskeys = client.WorkflowAccessKeys.List(this.resourceGroupName, workflowName);
                 Assert.Equal(1, accesskeys.Count());
             }
         }
 
-		[Fact]
+        [Fact]
         public void CreateAndList()
         {
-            using (MockContext context = MockContext.Start())
+            using (MockContext context = MockContext.Start("Test.Azure.Management.Logic.WorkflowAccessKeysScenarioTests"))
             {
                 string workflowName = TestUtilities.GenerateName("logicwf");
                 string accessKeyName = TestUtilities.GenerateName("accesskey");
@@ -78,10 +75,7 @@ namespace Test.Azure.Management.Logic
                     workflow: new Workflow
                     {
                         Location = this.location,
-                        Sku = new Sku()
-                        {
-                            Name = SkuName.Basic
-                        },
+                        Sku = this.sku,
                         State = WorkflowState.Enabled,
                         Definition = JToken.Parse(this.simpleDefinition)
                     });
@@ -106,10 +100,10 @@ namespace Test.Azure.Management.Logic
             }
         }
 
-		[Fact]
-		public void RegenerateAndListSecretKeys()
+        [Fact]
+        public void RegenerateAndListSecretKeys()
         {
-            using (MockContext context = MockContext.Start())
+            using (MockContext context = MockContext.Start("Test.Azure.Management.Logic.WorkflowAccessKeysScenarioTests"))
             {
                 string workflowName = TestUtilities.GenerateName("logicwf");
                 string accessKeyName = TestUtilities.GenerateName("accesskey");
@@ -122,10 +116,7 @@ namespace Test.Azure.Management.Logic
                     workflow: new Workflow
                     {
                         Location = this.location,
-                        Sku = new Sku()
-                        {
-                            Name = SkuName.Basic
-                        },
+                        Sku = this.sku,
                         State = WorkflowState.Enabled,
                         Definition = JToken.Parse(this.simpleDefinition)
                     });
@@ -157,7 +148,7 @@ namespace Test.Azure.Management.Logic
                 Assert.NotEmpty(secretKeys.PrimarySecretKey);
                 Assert.NotEmpty(secretKeys.SecondarySecretKey);
 
-				// List secrets and verify response
+                // List secrets and verify response
                 secretKeys = client.WorkflowAccessKeys.ListSecretKeys(this.resourceGroupName, workflowName, accessKeyName);
                 Assert.NotEmpty(secretKeys.PrimarySecretKey);
                 Assert.NotEmpty(secretKeys.SecondarySecretKey);

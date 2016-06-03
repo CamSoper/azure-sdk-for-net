@@ -5,12 +5,22 @@
 namespace Test.Azure.Management.Logic
 {
     using Microsoft.Azure.Management.Logic;
+    using Microsoft.Azure.Management.Logic.Models;
     using Microsoft.Rest.ClientRuntime.Azure.TestFramework;
 
     public class BaseScenarioTests : TestBase
     {
         protected string resourceGroupName = "flowrg";
         protected string location = "westus";
+
+        protected Sku sku = new Sku
+        {
+            Name = SkuName.Standard,
+            Plan = new ResourceReference
+            {
+                Id = "/subscriptions/402177bc-c2ea-4a5d-98b3-7623eee7f0a1/resourceGroups/Default-SQL-EastAsia/providers/Microsoft.Web/serverFarms/Plan"
+            }
+        };
 
         protected LogicManagementClient GetLogicManagementClient(MockContext context)
         {
@@ -39,9 +49,9 @@ namespace Test.Azure.Management.Logic
             'defaultValue':{
                 'type':'ActiveDirectoryOAuth',
                 'audience':'https://management.azure.com/',
-                'tenant':'72f988bf-86f1-41af-91ab-2d7cd011db47',
-                'clientId':'64011f29-3932-4168-b73d-adc835a56732',
-                'secret':'q8Wf7SwoM4iSVgaHZdghScLX8xDxMMUATWvRalclJjo='
+                'tenant':'66666666-6666-6666-6666-666666666666',
+                'clientId':'66666666-6666-6666-6666-666666666666',
+                'secret':'<placeholder>'
             },
             'type':'Object'
         }

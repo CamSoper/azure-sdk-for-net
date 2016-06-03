@@ -28,8 +28,20 @@ namespace Microsoft.Azure.Search.Tests
                     client.Documents.CountWithHttpMessagesAsync(options).Result;
                 Assert.Equal(HttpStatusCode.OK, countResponse.Response.StatusCode);
 
-                Assert.Equal(options.RequestId.Value.ToString("D"), countResponse.RequestId);
+                Assert.Equal(options.ClientRequestId.Value.ToString("D"), countResponse.RequestId);
             });
+        }
+
+        [Fact]
+        public void ConstructorCreatesCorrectUrl()
+        {
+            const string ExpectedUrl = "https://azs-test.search.windows.net/indexes('test')/";
+
+            var client = new SearchIndexClient("azs-test", "test", new SearchCredentials("abc"));
+            Assert.Equal(ExpectedUrl, client.BaseUri.AbsoluteUri);
+
+            client = new SearchIndexClient("azs-test", "test", new SearchCredentials("abc"), new HttpClientHandler());
+            Assert.Equal(ExpectedUrl, client.BaseUri.AbsoluteUri);
         }
 
         [Fact]
